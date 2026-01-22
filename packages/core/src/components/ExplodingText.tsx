@@ -66,6 +66,11 @@ type ExplosionGeometryOptions = ExplosionMaterialOptions & {
   animationDuration: number;
 };
 
+type ShaderLike = {
+  uniforms: Record<string, { value: unknown }>;
+  vertexShader: string;
+};
+
 function createExplosionMaterial(options: ExplosionMaterialOptions) {
   const material = new THREE.MeshPhongMaterial({
     color: new THREE.Color(options.color),
@@ -76,7 +81,7 @@ function createExplosionMaterial(options: ExplosionMaterialOptions) {
     transparent: true
   });
 
-  material.onBeforeCompile = (shader) => {
+  material.onBeforeCompile = (shader: ShaderLike) => {
     shader.uniforms.uTime = { value: 0 };
 
     const vertexFunctions = `
