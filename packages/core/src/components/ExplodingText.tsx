@@ -13,11 +13,13 @@ export interface ExplodingTextProps {
   shininess?: number;
   fontSize?: number;
   depth?: number;
+  curveSegments?: number;
   bevelSize?: number;
   bevelThickness?: number;
   particleRadius?: number;
   animationDuration?: number;
   animationProgress?: number;
+  speed?: number;
   autoplay?: boolean;
   yoyo?: boolean;
   repeatDelay?: number;
@@ -240,11 +242,13 @@ export function ExplodingText({
   shininess = 4,
   fontSize = 40,
   depth = 12,
+  curveSegments = 24,
   bevelSize = 2,
   bevelThickness = 2,
   particleRadius = 200,
   animationDuration = 4,
   animationProgress,
+  speed = 1,
   autoplay = true,
   yoyo = true,
   repeatDelay = 0.5
@@ -267,13 +271,14 @@ export function ExplodingText({
   const meshes = useMemo<ExplosionMeshData[]>(() => {
     const lineHeight = fontSize * 1.3;
     const totalHeight = lines.length * lineHeight;
+    const duration = animationDuration / Math.max(speed, 0.01);
 
     return lines.map((lineText, lineIndex) => {
       const geometry = new TextGeometry(lineText, {
         font,
         size: fontSize,
         depth,
-        curveSegments: 24,
+        curveSegments,
         bevelEnabled: true,
         bevelSize,
         bevelThickness
@@ -282,11 +287,11 @@ export function ExplodingText({
       geometry.computeBoundingBox();
       const sizeVec = new THREE.Vector3();
       geometry.boundingBox?.getSize(sizeVec);
-      geometry.translate(-sizeVec.x / 2, 0, -sizeVec.z / 2);
+      geometry.translate(-sizeVec.x / 2, -sizeVec.y / 2, -sizeVec.z / 2);
 
       const meshData = createExplodingMesh(geometry, {
         particleRadius,
-        animationDuration,
+        animationDuration: duration,
         color,
         specular,
         shininess
@@ -302,13 +307,15 @@ export function ExplodingText({
     bevelSize,
     bevelThickness,
     color,
+    curveSegments,
     depth,
     font,
     fontSize,
     lines,
     particleRadius,
     shininess,
-    specular
+    specular,
+    speed
   ]);
 
   useEffect(() => {
@@ -327,6 +334,7 @@ export function ExplodingText({
       return;
     }
 
+    const duration = animationDuration / Math.max(speed, 0.01);
     const tl = gsap.timeline({
       repeat: -1,
       repeatDelay,
@@ -335,14 +343,14 @@ export function ExplodingText({
 
     tl.to(timelineState.current, {
       progress: 1,
-      duration: animationDuration,
+      duration,
       ease: 'power1.inOut'
     });
 
     return () => {
       tl.kill();
     };
-  }, [animationDuration, animationProgress, autoplay, repeatDelay, yoyo]);
+  }, [animationDuration, animationProgress, autoplay, repeatDelay, speed, yoyo]);
 
   useFrame(() => {
     const progress = animationProgress !== undefined
