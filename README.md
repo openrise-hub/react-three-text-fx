@@ -2,6 +2,8 @@
 
 Dynamic 3D typography for React. From interactive particle structures to cinematic motion effects in Three.js.
 
+https://github.com/user-attachments/assets/43bda4d2-65b5-476e-99c7-2fdace0dcccf
+
 ## Structure
 
 - packages/core — the library code
