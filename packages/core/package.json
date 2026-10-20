@@ -28,9 +28,9 @@
     "@react-three/fiber": ">=9.0.0"
   },
   "devDependencies": {
-    "@types/three": "^0.172.0",
+    "@types/three": "^0.186.0",
     "tsup": "^8.0.0",
     "typescript": "^5.4.0",
-    "three": "^0.182.0"
+    "three": "^0.186.0"
   }
 }
