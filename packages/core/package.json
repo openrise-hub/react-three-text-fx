@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@types/three": "^0.172.0",
-    "tsup": "^8.0.0",
+    "tsup": "^9.0.0",
     "typescript": "^5.4.0",
     "three": "^0.182.0"
   }
